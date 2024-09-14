@@ -5,7 +5,7 @@ const path = require('path');
 const { throws } = require('assert');
 
 const executePython = async (script, arg2, arg3) => {
-  path.join(process.cwd(), '/home/vansh/programs/Hack-a-Sol/model/')
+  path.join(process.cwd(), 'D:\Programs\Hack-A-Sol\Hack-a-Sol\model')
   const py = spawn("python", [script, arg2, arg3]);
 
   const result = await new Promise((resolve, reject) => {
@@ -35,7 +35,7 @@ const executePython = async (script, arg2, arg3) => {
 router.post('/', async (req, res) => {
   const body = await req.body;
   try{
-    const result = await executePython('/home/vansh/programs/Hack-a-Sol/model/run.py', "Eberechi Eze", "West Ham United");
+    const result = await executePython('D:\\Programs\\Hack-A-Sol\\Hack-a-Sol\\model\\run.py', "Eberechi Eze", "West Ham United");
     console.log(result);
     const array = result.split('\n');
     if(array.length % 7 != 0){
