@@ -114,7 +114,7 @@ const SelectTeam = () => {
     }, [])
 
     return (
-        <div className="flex flex-col md:flex-row justify-between items-start bg-gray-900 p-6 text-white space-y-6 md:space-y-0 md:space-x-10 rounded-lg shadow-lg transition-all duration-300 ease-in-out hover:bg-gray-800">
+        <div className="flex flex-col md:flex-row justify-between items-start bg-[#392061] p-6 text-white space-y-6 md:space-y-0 md:space-x-10 shadow-lg transition-all duration-300 ease-in-out ">
             {/* FIFA Card Image on the left */}
             <div className="relative w-72 h-auto">
                 <img 
