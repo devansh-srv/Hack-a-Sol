@@ -14,15 +14,15 @@ const SelectTeam = () => {
         "Team": "Manchester City",
         "Goals": 2,
         "Assists": 0,
-        "Total Tackles": 0,
-        "Accurate Passes": "12/14 (86%)",
-        "Duels Won": 6,
-        "Ground Duels Won": 2,
-        "Aerial Duels Won": 4,
-        "Minutes Played": 89,
+        "TotalTackles": 0,
+        "AccuratePasses": "12/14 (86%)",
+        "DuelsWon": 6,
+        "GroundDuelsWon": 2,
+        "AerialDuelsWon": 4,
+        "MinutesPlayed": 89,
         "Position": "F",
-        "Sofascore Rating": 8.0,
-        "Pass Accuracy": 86
+        "SofascoreRating": 8.0,
+        "PassAccuracy": 86
     };
 
     // Radar chart data for overall performance
