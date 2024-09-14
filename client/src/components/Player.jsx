@@ -59,7 +59,7 @@ const SelectTeam = () => {
 
     // Line chart for time-based stats
     const lineData = {
-        labels: ['0', '30', '60', '90'], // Time intervals in minutes
+        labels: ['0', '10', '20', '30','40','50','60','70', '80', '90'], // Time intervals in minutes
         datasets: [
             {
                 label: 'Goals over Time',
@@ -114,7 +114,10 @@ const SelectTeam = () => {
     }, [])
 
     return (
-        <div className="flex flex-col md:flex-row justify-between items-start bg-[#392061] p-6 text-white space-y-6 md:space-y-0 md:space-x-10 shadow-lg transition-all duration-300 ease-in-out ">
+        <div
+            className="flex flex-col md:flex-row justify-between items-start p-6 text-white space-y-6 md:space-y-0 md:space-x-10 shadow-lg transition-all duration-300 ease-in-out w-full h-screen"
+            style={{ backgroundImage: "url('/bg4.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+        >
             {/* FIFA Card Image on the left */}
             <div className="relative w-72 h-auto">
                 <img 
@@ -130,59 +133,61 @@ const SelectTeam = () => {
                 <p className="text-lg font-light text-gray-300">{data.Team} | {data.Match}</p>
 
                 {/* Radar Chart for Overall Performance */}
-                <div className="flex flex-wrap justify-around">
-                    <div className="w-64 h-64">
+                <div className="flex flex-wrap justify-around ">
+                    <div className="w-64 h-64 bg-[#FFE3E0] rounded-lg shadow-lg p-2">
                         <Radar data={radarData} options={chartOptions} />
                     </div>
 
                     {/* Line Chart for Goals Progression */}
-                    <div className="w-64 h-40">
+                    <div className="w-64 h-64 bg-[#FFE3E0] rounded-lg shadow-lg p-2">
                         <Line data={lineData} options={chartOptions} />
                     </div>
 
                     {/* Pie Chart for Pass Accuracy */}
-                    <div className="w-40 h-40 mt-4">
-                        <h2 className="text-xl font-bold mb-2">Pass Accuracy</h2>
+                    <div className="w-64 h-64 bg-[#FFE3E0] rounded-lg shadow-lg p-4 flex flex-col items-center justify-center">
+                    <h2 className="text-xl font-bold mb-2 text-center">Pass Accuracy</h2>
+                    <div className="w-40 h-40">
                         <Pie data={pieData} options={chartOptions} />
+                    </div>
                     </div>
                 </div>
 
-                {/* Circular Stats Section */}
-                <div className="grid grid-cols-2 gap-6 mt-6">
-                    <div className="flex flex-col items-center">
-                        <div className="w-24 h-24">
-                            <CircularProgressbar
-                                value={data.Goals * 50} // 50% progress per goal
-                                maxValue={100}
-                                text={`${data.Goals} Goals`}
-                                styles={buildStyles({
-                                    pathColor: 'green',
-                                    textColor: 'white',
-                                    trailColor: 'gray',
-                                })}
-                            />
-                        </div>
+                <div className="flex space-x-6 justify-center mt-6">
+                {/* Goals Progress */}
+                <div className="flex flex-col items-center bg-[#392061] p-4 rounded-lg shadow-lg">
+                    <div className="w-28 h-28 flex items-center justify-center">
+                        <span className="text-4xl font-bold text-white">
+                            {data.Goals}
+                        </span>
                     </div>
-                    <div className="flex flex-col items-center">
-                        <div className="w-24 h-24">
-                            <CircularProgressbar
-                                value={data.SofascoreRating * 10} // Scale rating to 100
-                                text={`${data.SofascoreRating} Rating`}
-                                styles={buildStyles({
-                                    pathColor: 'yellow',
-                                    textColor: 'white',
-                                    trailColor: 'gray',
-                                })}
-                            />
-                        </div>
-                    </div>
+                    <span className="mt-2 text-white text-sm">Goals Prediction</span>
                 </div>
+
+            {/* Sofascore Rating Progress */}
+            <div className="flex flex-col items-center bg-[#392061] p-4 rounded-lg shadow-lg">
+                <div className="w-28 h-28">
+                    <CircularProgressbar
+                        value={data.SofascoreRating * 10}
+                        maxValue={100}
+                        text={`${data.SofascoreRating}`}
+                        styles={buildStyles({
+                            pathColor: 'yellow',
+                            textColor: 'white',
+                            trailColor: 'gray',
+                        })}
+                    />
+                </div>
+                <span className="mt-2 text-white text-sm">Rating Prediction</span>
+            </div>
+</div>
+
+
 
                 {/* Display Remaining Stats */}
                 <div className="mt-6 text-gray-300">
                     <h2 className="text-xl font-semibold">Additional Stats</h2>
                     <ul className="list-none mt-2 space-y-2">
-                        <li><strong>Minutes Played:</strong> {data.MinutesPlayed} mins</li>
+                        {/* <li><strong>Minutes Played:</strong> {data.MinutesPlayed} mins</li> */}
                         <li><strong>Total Tackles:</strong> {data.TotalTackles}</li>
                     </ul>
                 </div>
