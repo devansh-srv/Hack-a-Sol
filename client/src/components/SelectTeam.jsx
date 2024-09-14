@@ -1,22 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Pause, Play, SkipForward } from 'lucide-react';
-
-// Add this import at the top of your file
 import './style/customfont.css';
-
-const teams = [
-  { 
-    name: 'Manchester United', 
-    logo: '/man_ud.png',
-    players: ['Kevin De Bruyne', 'Erling Haaland', 'Riyad Mahrez', 'Phil Foden', 'Ederson']
-  },
-  { 
-    name: 'Man City', 
-    logo: '/man_city.png',
-    players: ['Marco Reus', 'Mats Hummels', 'Jude Bellingham', 'Julian Brandt', 'Youssoufa Moukoko']
-  },
-];
 
 const songs = [
   { title: "Love Me Again", artist: "John Newman", src: "/Love Me Again - John Newman.mp3" },
@@ -24,22 +9,63 @@ const songs = [
 ];
 
 const TeamSelection = () => {
-  const [homeTeam, setHomeTeam] = useState(teams[0]);
-  const [awayTeam, setAwayTeam] = useState(teams[1]);
+  const [teams, setTeams] = useState([]);
+  const [homeTeam, setHomeTeam] = useState(null);
+  const [awayTeam, setAwayTeam] = useState(null);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
 
+  // Initialize indices
+  const [homeIndex, setHomeIndex] = useState(0);
+  const [awayIndex, setAwayIndex] = useState(1);
+
+  // Function to fetch teams from the API
+  const getTeams = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/teams');
+      if (response.status === 200) {
+        const data = await response.json();
+        setTeams(data);
+        if (data.length > 0) {
+          setHomeTeam(data[0]);
+          setAwayTeam(data.length > 1 ? data[1] : null);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
+
+  useEffect(() => {
+    getTeams();
+  }, []);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.src = songs[currentSongIndex].src;
+      if (isPlaying) {
+        audioRef.current.play();
+      }
+    }
+  }, [currentSongIndex, isPlaying]);
+
+  // Function to change teams
   const changeTeam = (direction, isHome) => {
-    const currentTeam = isHome ? homeTeam : awayTeam;
-    const currentIndex = teams.findIndex(team => team.name === currentTeam.name);
-    const newIndex = (currentIndex + direction + teams.length) % teams.length;
-    const newTeam = teams[newIndex];
-    
+    if (teams.length === 0) return; // Avoid errors if teams are not yet loaded
+
     if (isHome) {
-      setHomeTeam(newTeam);
+      setHomeIndex(prevIndex => {
+        const newIndex = (prevIndex + (direction ? 1 : teams.length - 1)) % teams.length;
+        setHomeTeam(teams[newIndex]);
+        return newIndex;
+      });
     } else {
-      setAwayTeam(newTeam);
+      setAwayIndex(prevIndex => {
+        const newIndex = (prevIndex + (direction ? 1 : teams.length - 1)) % teams.length;
+        setAwayTeam(teams[newIndex]);
+        return newIndex;
+      });
     }
   };
 
@@ -53,17 +79,8 @@ const TeamSelection = () => {
   };
 
   const nextSong = () => {
-    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
+    setCurrentSongIndex(prevIndex => (prevIndex + 1) % songs.length);
   };
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.src = songs[currentSongIndex].src;
-      if (isPlaying) {
-        audioRef.current.play();
-      }
-    }
-  }, [currentSongIndex]);
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/bg3.jpg')" }}>
@@ -74,21 +91,47 @@ const TeamSelection = () => {
         <div className="bg-[#0F162B] rounded-3xl shadow-2xl p-8">
           <div className="flex items-center justify-between mb-8 h-48">
             <div className="w-1/3 flex justify-center">
-              <TeamCard team={homeTeam} onChange={(direction) => changeTeam(direction, true)} />
+              <div className="flex flex-col items-center justify-between h-full">
+                {homeTeam && <img src={`${homeTeam.Team}.png`} alt={homeTeam.Team} className="w-24 h-24 mb-2" />}
+                {homeTeam && <h2 className="text-xl font-semibold text-white mb-2 text-center">{homeTeam.Team}</h2>}
+                <div className="flex space-x-2">
+                  <button onClick={() => changeTeam(false, true)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button onClick={() => changeTeam(true, true)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="w-1/3 flex justify-center">
               <div className="text-3xl font-bold text-white">VS</div>
             </div>
             <div className="w-1/3 flex justify-center">
-              <TeamCard team={awayTeam} onChange={(direction) => changeTeam(direction, false)} />
+              <div className="flex flex-col items-center justify-between h-full">
+                {awayTeam && <img src={`${awayTeam.Team}.png`} alt={awayTeam.Team} className="w-24 h-24 mb-2" />}
+                {awayTeam && <h2 className="text-xl font-semibold text-white mb-2 text-center">{awayTeam.Team}</h2>}
+                <div className="flex space-x-2">
+                  <button onClick={() => changeTeam(false, false)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button onClick={() => changeTeam(true, false)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           
           <div className="bg-white bg-opacity-10 rounded-lg p-6">
             <h2 className="text-2xl font-semibold text-white mb-4 text-center">Home Players</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {homeTeam.players.map((player, index) => (
-                <PlayerButton key={index} player={player} />
+              {homeTeam && homeTeam.PlayerName.map((player, index) => (
+                <Link key={index} to={`/player?player=${player}&awayteam=${awayTeam?.Team}`} className="select-player-link">
+                  <button className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
+                    {player}
+                  </button>
+                </Link>
               ))}
             </div>
           </div>
@@ -99,8 +142,8 @@ const TeamSelection = () => {
       {/* Media Player */}
       <div className="absolute bottom-4 left-4 bg-[#0F162B] p-4 rounded-lg shadow-lg">
         <div className="text-white mb-2">
-          <p className="font-bold">{songs[currentSongIndex].title}</p>
-          <p className="text-sm">{songs[currentSongIndex].artist}</p>
+          <p className="font-bold">{songs[currentSongIndex]?.title}</p>
+          <p className="text-sm">{songs[currentSongIndex]?.artist}</p>
         </div>
         <div className="flex space-x-2">
           <button onClick={togglePlay} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
@@ -115,28 +158,5 @@ const TeamSelection = () => {
     </div>
   );
 };
-
-const TeamCard = ({ team, onChange }) => (
-  <div className="flex flex-col items-center justify-between h-full">
-    <img src={team.logo} alt={team.name} className="w-24 h-24 mb-2" />
-    <h2 className="text-xl font-semibold text-white mb-2 text-center">{team.name}</h2>
-    <div className="flex space-x-2">
-      <button onClick={() => onChange(-1)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
-        <ChevronLeft size={20} />
-      </button>
-      <button onClick={() => onChange(1)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
-        <ChevronRight size={20} />
-      </button>
-    </div>
-  </div>
-);
-
-const PlayerButton = ({ player }) => (
-  <Link to={`/player?player=${player.replace(/ /g,'')}`} className="select-player-link">
-    <button className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
-      {player}
-    </button>
-  </Link>
-);
 
 export default TeamSelection;

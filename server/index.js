@@ -5,9 +5,9 @@ const cors = require('cors')
 const app = express()
 const port = process.env.PORT
 const homeRoute = require('./routes/home');
-const matchRoute = require('./routes/match');
+const imageRoute = require('./routes/image');
 const playerRoute = require('./routes/player');
-const upcomingRoute = require('./routes/upcoming');
+const teamsRoute = require('./routes/teams');
 
 const {connectMongoDB} = require('./utils/prerun');
 const db = connectMongoDB();
@@ -18,9 +18,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/', homeRoute)
-app.use('/match', matchRoute);
+app.use('/image', imageRoute);
 app.use('/player', playerRoute);
-app.use('/upcoming', upcomingRoute);
+app.use('/teams', teamsRoute);
 
 app.listen(port, '0.0.0.0',() => {
   console.log(`listening on port ${port}`)

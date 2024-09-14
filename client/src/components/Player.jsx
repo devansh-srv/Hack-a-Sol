@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import image from '../assets/players/haaland.png';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Radar, Pie, Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 const SelectTeam = () => {
 
-    const search = useLocation();
-    const queryParams = new URLSearchParams(search);
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const [image, setImage] = useState('');
+  
+    const player = searchParams.get('player');
+    const awayteam = searchParams.get('awayteam');
 
     const [data, setData] = useState({
         "Match": "Tottenham Hotspur vs Manchester City",
@@ -22,8 +25,6 @@ const SelectTeam = () => {
         "TotalTackles": 0,
         "AccuratePasses": "12/14 (86%)",
         "DuelsWon": 6,
-        "GroundDuelsWon": 2,
-        "AerialDuelsWon": 4,
         "MinutesPlayed": 89,
         "Position": "F",
         "SofascoreRating": 8.0,
@@ -82,19 +83,34 @@ const SelectTeam = () => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                player: queryParams.get("player"),
-                awayteam: queryParams.get("awayteam"),
+                player: player,
+                awayteam: awayteam,
             })
         });
 
         if(response.status === 200){
             const json = await response.json();
+            json.Match = `${player} VS ${awayteam}`;
+            json.Player = player
+            setData(json);
             console.log(json);
+        }
+    }
+
+    const getImage = async () => {
+        const response = await fetch(`http://localhost:3000/image?player=${player}`, {
+            method: "GET",
+        })
+
+        if(response.status === 200){
+            const json = await response.json();
+            setImage(json.PlayerLink);
         }
     }
 
     useEffect(()=>{
         getData();
+        getImage();
     }, [])
 
     return (
@@ -168,8 +184,6 @@ const SelectTeam = () => {
                     <ul className="list-none mt-2 space-y-2">
                         <li><strong>Minutes Played:</strong> {data.MinutesPlayed} mins</li>
                         <li><strong>Total Tackles:</strong> {data.TotalTackles}</li>
-                        <li><strong>Ground Duels Won:</strong> {data.GroundDuelsWon}</li>
-                        <li><strong>Aerial Duels Won:</strong> {data.AerialDuelsWon}</li>
                     </ul>
                 </div>
             </div>
