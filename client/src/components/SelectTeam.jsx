@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Pause, Play, SkipForward } from 'lucide-react';
 
 // Add this import at the top of your file
 import './style/customfont.css';
@@ -19,13 +19,16 @@ const teams = [
 ];
 
 const songs = [
-    { title: "Love Me Again", artist: "John Newman", src: "/love-me-again.mp3" },
-    { title: "Feet Don't Fail Me Now", artist: "Joy Crookes", src: "/feet-dont-fail-me-now.mp3" },
+  { title: "Love Me Again", artist: "John Newman", src: "/Love Me Again - John Newman.mp3" },
+  { title: "Feet Don't Fail Me Now", artist: "Joy Crookes", src: "/Feet Dont Fail Me Now.mp3" },
 ];
 
 const TeamSelection = () => {
   const [homeTeam, setHomeTeam] = useState(teams[0]);
   const [awayTeam, setAwayTeam] = useState(teams[1]);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
 
   const changeTeam = (direction, isHome) => {
     const currentTeam = isHome ? homeTeam : awayTeam;
@@ -39,6 +42,28 @@ const TeamSelection = () => {
       setAwayTeam(newTeam);
     }
   };
+
+  const togglePlay = () => {
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const nextSong = () => {
+    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
+  };
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.src = songs[currentSongIndex].src;
+      if (isPlaying) {
+        audioRef.current.play();
+      }
+    }
+  }, [currentSongIndex]);
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/bg3.jpg')" }}>
@@ -70,6 +95,23 @@ const TeamSelection = () => {
         </div>
       </div>
       <img src="/premier-league.svg" alt="Premier League Logo" className="absolute bottom-4 right-4 w-32 h-32" />
+      
+      {/* Media Player */}
+      <div className="absolute bottom-4 left-4 bg-[#0F162B] p-4 rounded-lg shadow-lg">
+        <div className="text-white mb-2">
+          <p className="font-bold">{songs[currentSongIndex].title}</p>
+          <p className="text-sm">{songs[currentSongIndex].artist}</p>
+        </div>
+        <div className="flex space-x-2">
+          <button onClick={togglePlay} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+            {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+          </button>
+          <button onClick={nextSong} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+            <SkipForward size={20} />
+          </button>
+        </div>
+        <audio ref={audioRef} onEnded={nextSong} />
+      </div>
     </div>
   );
 };
