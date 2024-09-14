@@ -8,7 +8,7 @@ from sklearn.multioutput import MultiOutputRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_squared_error# Load data from the JSON file
-with open('../../../devansh/Downloads/output_matches.json') as file:
+with open('./output_matches.json') as file:
     data = json.load(file)
 
 # Prepare an empty list to store the extracted player statistics

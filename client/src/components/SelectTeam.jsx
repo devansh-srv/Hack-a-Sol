@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Add this import at the top of your file
@@ -78,9 +79,12 @@ const TeamCard = ({ team, onChange }) => (
 );
 
 const PlayerButton = ({ player }) => (
-  <button className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
-    {player}
-  </button>
+
+  <Link to={`/player?player=${player.replace(/ /g,'')}`} className="select-player-link">
+    <button className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
+      {player}
+    </button>
+  </Link>
 );
 
 export default TeamSelection;

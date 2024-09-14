@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import image from '../assets/players/haaland.png';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Radar, Pie, Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import { useLocation } from 'react-router-dom';
 
 const SelectTeam = () => {
-    const data = {
+
+    const search = useLocation();
+    const queryParams = new URLSearchParams(search);
+
+    const [data, setData] = useState({
         "Match": "Tottenham Hotspur vs Manchester City",
         "Team 1": "Tottenham Hotspur",
         "Team 2": "Manchester City",
@@ -23,7 +28,7 @@ const SelectTeam = () => {
         "Position": "F",
         "SofascoreRating": 8.0,
         "PassAccuracy": 86
-    };
+    });
 
     // Radar chart data for overall performance
     const radarData = {
@@ -69,6 +74,28 @@ const SelectTeam = () => {
         maintainAspectRatio: false,
         aspectRatio: 1.5, // Controls the height/width ratio of charts
     };
+
+    const getData = async () => {
+        const response = await fetch(`http://localhost:3000/player`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                player: queryParams.get("player"),
+                awayteam: queryParams.get("awayteam"),
+            })
+        });
+
+        if(response.status === 200){
+            const json = await response.json();
+            console.log(json);
+        }
+    }
+
+    useEffect(()=>{
+        getData();
+    }, [])
 
     return (
         <div className="flex flex-col md:flex-row justify-between items-start bg-gray-900 p-6 text-white space-y-6 md:space-y-0 md:space-x-10 rounded-lg shadow-lg transition-all duration-300 ease-in-out hover:bg-gray-800">

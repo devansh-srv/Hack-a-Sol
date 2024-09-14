@@ -1,8 +1,9 @@
+import sys
 import pandas as pd
 import joblib
 import json
 from sklearn.preprocessing import LabelEncoder
-with open('../../../devansh/Downloads/output_matches.json') as file:
+with open('/home/vansh/programs/Hack-a-Sol/model/output_matches.json') as file:
     data = json.load(file)
 
 # Prepare an empty list to store the extracted player statistics
@@ -30,9 +31,9 @@ for match_id, match_info in data.items():
 
 
 # Load the saved models
-rf_model = joblib.load('rf_model.pkl')
-xgb_model = joblib.load('xgb_model.pkl')
-gbr_model = joblib.load('gbr_model.pkl')
+rf_model = joblib.load('/home/vansh/programs/Hack-a-Sol/model/rf_model.pkl')
+xgb_model = joblib.load('/home/vansh/programs/Hack-a-Sol/model/xgb_model.pkl')
+gbr_model = joblib.load('/home/vansh/programs/Hack-a-Sol/model/gbr_model.pkl')
 
 # Function to predict performance based on player name and opponent
 def predict_player_performance(player_name, opponent, player_data, df):
