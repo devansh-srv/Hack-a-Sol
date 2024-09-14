@@ -1,123 +1,86 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import './style/selecteam.css';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+// Add this import at the top of your file
+import './style/customfont.css';
 
 const teams = [
-    { 
-        name: 'Manchester City', 
-        logo: '/testteam.png',
-        players: ['Kevin De Bruyne', 'Erling Haaland', 'Riyad Mahrez', 'Phil Foden', 'Ederson']
-    },
-    { 
-        name: 'Bor. Dortmund', 
-        logo: '/testteam.png',
-        players: ['Marco Reus', 'Mats Hummels', 'Jude Bellingham', 'Julian Brandt', 'Youssoufa Moukoko']
-    },
-    { 
-        name: 'Real Madrid', 
-        logo: '/testteam.png',
-        players: ['Karim Benzema', 'Luka Modric', 'Vinícius Jr.', 'Toni Kroos', 'Thibaut Courtois']
-    },
-    { 
-        name: 'Barcelona', 
-        logo: '/testteam.png',
-        players: ['Robert Lewandowski', 'Pedri', 'Frenkie de Jong', 'Ousmane Dembélé', 'Marc-André ter Stegen']
-    }
+  { 
+    name: 'Manchester United', 
+    logo: '/man_ud.png',
+    players: ['Kevin De Bruyne', 'Erling Haaland', 'Riyad Mahrez', 'Phil Foden', 'Ederson']
+  },
+  { 
+    name: 'Man City', 
+    logo: '/man_city.png',
+    players: ['Marco Reus', 'Mats Hummels', 'Jude Bellingham', 'Julian Brandt', 'Youssoufa Moukoko']
+  },
 ];
 
-const SelectTeam = () => {
-    const [selectedHomeTeam, setSelectedHomeTeam] = useState(teams[0]);
-    const [selectedAwayTeam, setSelectedAwayTeam] = useState(teams[1]);
+const TeamSelection = () => {
+  const [homeTeam, setHomeTeam] = useState(teams[0]);
+  const [awayTeam, setAwayTeam] = useState(teams[1]);
+
+  const changeTeam = (direction, isHome) => {
+    const currentTeam = isHome ? homeTeam : awayTeam;
+    const currentIndex = teams.findIndex(team => team.name === currentTeam.name);
+    const newIndex = (currentIndex + direction + teams.length) % teams.length;
+    const newTeam = teams[newIndex];
     
-    const [players, setPlayers] = useState([]);
-
-    const changeHomeTeamForward = () => {
-        const nextIndex = (teams.indexOf(selectedHomeTeam) + 1) % teams.length;
-        setSelectedHomeTeam(teams[nextIndex]);
-        setPlayers(teams[nextIndex].players)
-    };
-
-    const changeHomeTeamBackward = () => {
-        const nextIndex = (teams.indexOf(selectedHomeTeam) - 1 + teams.length) % teams.length;
-        setSelectedHomeTeam(teams[nextIndex]);
-        setPlayers(teams[nextIndex].players)
-    };
-
-    const changeAwayTeamForward = () => {
-        const nextIndex = (teams.indexOf(selectedAwayTeam) + 1) % teams.length;
-        setSelectedAwayTeam(teams[nextIndex]);
-    };
-
-    const changeAwayTeamBackward = () => {
-        const nextIndex = (teams.indexOf(selectedAwayTeam) - 1 + teams.length) % teams.length;
-        setSelectedAwayTeam(teams[nextIndex]);
-    };
-
-    const getTeams = async () => {
-        const response = await fetch("http://localhost:3000/teams",{
-            method: "GET",
-        })
-
-        if(response.status === 200){
-            const json = await response.json();
-            teams = json.teams
-            teams = json.teams
-            setPlayers(teams[0].players)
-        }
+    if (isHome) {
+      setHomeTeam(newTeam);
+    } else {
+      setAwayTeam(newTeam);
     }
+  };
 
-    useEffect(()=>{
-        setPlayers(teams[0].players) // for now temp
-        getTeams();
-        //getPlayers("somethign");
-    },[])
-
-    return (
-        <div className="team-selection-container">
-            <div className="premierleague">Premier League</div>
-            <div className="team-selection">
-                <div className="team-card">
-                    <img src={selectedHomeTeam.logo} alt="Home Team" className="team-logo" />
-                    <h2>{selectedHomeTeam.name}</h2>
-                    <div className="change-team-buttons-container">
-                        <button className="change-team-button" onClick={changeHomeTeamBackward}>
-                            <img className="change-team-image" src="/backward-logo.png"/>
-                        </button>
-                        <button className="change-team-button" onClick={changeHomeTeamForward}>
-                            <img className="change-team-image" src="/forward-logo.png"/>
-                        </button>
-                    </div>
-                </div>
-                <div className="vs">VS</div>
-                <div className="team-card">
-                    <img src={selectedAwayTeam.logo} alt="Away Team" className="team-logo" />
-                    <h2>{selectedAwayTeam.name}</h2>
-                    <div className="change-team-buttons-container">
-                        <button className="change-team-button" onClick={changeAwayTeamBackward}>
-                            <img className="change-team-image" src="/backward-logo.png"/>
-                        </button>
-                        <button className="change-team-button" onClick={changeAwayTeamForward}>
-                            <img className="change-team-image" src="/forward-logo.png"/>
-                        </button>
-                    </div>
-                </div>
+  return (
+    <div className="relative flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/bg3.jpg')" }}>
+      <div className="absolute inset-0 bg-black bg-opacity-25"></div>
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4">
+        <h1 className="text-6xl font-bold text-white text-center mb-16 premier-league-font">Premier League Prediction</h1>
+        
+        <div className="bg-[#0F162B] rounded-3xl shadow-2xl p-8">
+          <div className="flex items-center justify-between mb-8">
+            <TeamCard team={homeTeam} onChange={(direction) => changeTeam(direction, true)} />
+            <div className="text-3xl font-bold text-white absolute left-1/2 transform -translate-x-1/2">VS</div>
+            <TeamCard team={awayTeam} onChange={(direction) => changeTeam(direction, false)} />
+          </div>
+          
+          <div className="bg-white bg-opacity-10 rounded-lg p-6">
+            <h2 className="text-2xl font-semibold text-white mb-4 text-center">Home Players</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {homeTeam.players.map((player, index) => (
+                <PlayerButton key={index} player={player} />
+              ))}
             </div>
-
-            <div className="player-list-container">
-                <div className="homeplayers">Home Players</div>
-                <ul className="player-list">
-                    {players.map((player, index) => (
-                        <li key={index} className="player-item">
-                            {player}
-                            <Link to={`/player?player=${player.replace(/ /g,'')}&awayteam=${selectedAwayTeam.name.replace(/ /g, '')}`} className="select-player-link">
-                                <button className="select-player-button">Select</button>
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+          </div>
         </div>
-    );
+      </div>
+      <img src="/premier-league.svg" alt="Premier League Logo" className="absolute bottom-4 right-4 w-32 h-32" />
+    </div>
+  );
 };
 
-export default SelectTeam;
+const TeamCard = ({ team, onChange }) => (
+  <div className="flex flex-col items-center">
+    <img src={team.logo} alt={team.name} className="w-24 h-24 mb-2" />
+    <h2 className="text-xl font-semibold text-white mb-2">{team.name}</h2>
+    <div className="flex space-x-2">
+      <button onClick={() => onChange(-1)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+        <ChevronLeft size={20} />
+      </button>
+      <button onClick={() => onChange(1)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+        <ChevronRight size={20} />
+      </button>
+    </div>
+  </div>
+);
+
+const PlayerButton = ({ player }) => (
+  <button className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
+    {player}
+  </button>
+);
+
+export default TeamSelection;

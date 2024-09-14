@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'PremierLeague';
+    src: url('/path-to-your-font-file.woff2') format('woff2'),
+         url('/path-to-your-font-file.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  .premier-league-font {
+    font-family: 'PremierLeague', sans-serif;
+  }
