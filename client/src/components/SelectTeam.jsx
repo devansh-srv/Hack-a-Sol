@@ -86,7 +86,7 @@ const TeamSelection = () => {
     <div className="relative flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/bg3.jpg')" }}>
       <div className="absolute inset-0 bg-black bg-opacity-25"></div>
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4">
-        <h1 className="text-6xl font-bold text-white text-center mb-16 premier-league-font">Premier League Prediction</h1>
+        <h1 className="text-6xl font-bold text-white text-center mb-12 premier-league-font">Premier League Prediction</h1>
         
         <div className="bg-[#0F162B] rounded-3xl shadow-2xl p-8">
           <div className="flex items-center justify-between mb-8 h-48">
@@ -95,10 +95,10 @@ const TeamSelection = () => {
                 {homeTeam && <img src={`${homeTeam.Team}.png`} alt={homeTeam.Team} className="w-24 h-24 mb-2" />}
                 {homeTeam && <h2 className="text-xl font-semibold text-white mb-2 text-center">{homeTeam.Team}</h2>}
                 <div className="flex space-x-2">
-                  <button onClick={() => changeTeam(false, true)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                  <button onClick={() => changeTeam(false, true)} className="bg-[#E62498] hover:bg-opacity-80 text-white p-2 rounded-full">
                     <ChevronLeft size={20} />
                   </button>
-                  <button onClick={() => changeTeam(true, true)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                  <button onClick={() => changeTeam(true, true)} className="bg-[#E62498] hover:bg-opacity-80 text-white p-2 rounded-full">
                     <ChevronRight size={20} />
                   </button>
                 </div>
@@ -112,10 +112,10 @@ const TeamSelection = () => {
                 {awayTeam && <img src={`${awayTeam.Team}.png`} alt={awayTeam.Team} className="w-24 h-24 mb-2" />}
                 {awayTeam && <h2 className="text-xl font-semibold text-white mb-2 text-center">{awayTeam.Team}</h2>}
                 <div className="flex space-x-2">
-                  <button onClick={() => changeTeam(false, false)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                  <button onClick={() => changeTeam(false, false)} className="bg-[#E62498] hover:bg-opacity-80 text-white p-2 rounded-full">
                     <ChevronLeft size={20} />
                   </button>
-                  <button onClick={() => changeTeam(true, false)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+                  <button onClick={() => changeTeam(true, false)} className="bg-[#E62498] hover:bg-opacity-80 text-white p-2 rounded-full">
                     <ChevronRight size={20} />
                   </button>
                 </div>
@@ -123,12 +123,12 @@ const TeamSelection = () => {
             </div>
           </div>
           
-          <div className="bg-white bg-opacity-10 rounded-lg p-6">
-            <h2 className="text-2xl font-semibold text-white mb-4 text-center">Home Players</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div className="bg-white bg-opacity-10 rounded-lg p-4">
+            <h2 className="text-xl font-semibold text-white mb-3 text-center">Home Players</h2>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {homeTeam && homeTeam.PlayerName.map((player, index) => (
                 <Link key={index} to={`/player?player=${player}&awayteam=${awayTeam?.Team}`} className="select-player-link">
-                  <button className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
+                  <button className="w-full bg-[#0e7c7b] hover:bg-opacity-80 text-white font-semibold py-1 px-2 rounded text-sm transition duration-300 ease-in-out transform hover:scale-105">
                     {player}
                   </button>
                 </Link>
@@ -146,10 +146,10 @@ const TeamSelection = () => {
           <p className="text-sm">{songs[currentSongIndex]?.artist}</p>
         </div>
         <div className="flex space-x-2">
-          <button onClick={togglePlay} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+          <button onClick={togglePlay} className="bg-[#E62498] hover:bg-opacity-80 text-white p-2 rounded-full">
             {isPlaying ? <Pause size={20} /> : <Play size={20} />}
           </button>
-          <button onClick={nextSong} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+          <button onClick={nextSong} className="bg-[#E62498] hover:bg-opacity-80 text-white p-2 rounded-full">
             <SkipForward size={20} />
           </button>
         </div>
