@@ -18,6 +18,11 @@ const teams = [
   },
 ];
 
+const songs = [
+    { title: "Love Me Again", artist: "John Newman", src: "/love-me-again.mp3" },
+    { title: "Feet Don't Fail Me Now", artist: "Joy Crookes", src: "/feet-dont-fail-me-now.mp3" },
+];
+
 const TeamSelection = () => {
   const [homeTeam, setHomeTeam] = useState(teams[0]);
   const [awayTeam, setAwayTeam] = useState(teams[1]);
@@ -42,10 +47,16 @@ const TeamSelection = () => {
         <h1 className="text-6xl font-bold text-white text-center mb-16 premier-league-font">Premier League Prediction</h1>
         
         <div className="bg-[#0F162B] rounded-3xl shadow-2xl p-8">
-          <div className="flex items-center justify-between mb-8">
-            <TeamCard team={homeTeam} onChange={(direction) => changeTeam(direction, true)} />
-            <div className="text-3xl font-bold text-white absolute left-1/2 transform -translate-x-1/2">VS</div>
-            <TeamCard team={awayTeam} onChange={(direction) => changeTeam(direction, false)} />
+          <div className="flex items-center justify-between mb-8 h-48">
+            <div className="w-1/3 flex justify-center">
+              <TeamCard team={homeTeam} onChange={(direction) => changeTeam(direction, true)} />
+            </div>
+            <div className="w-1/3 flex justify-center">
+              <div className="text-3xl font-bold text-white">VS</div>
+            </div>
+            <div className="w-1/3 flex justify-center">
+              <TeamCard team={awayTeam} onChange={(direction) => changeTeam(direction, false)} />
+            </div>
           </div>
           
           <div className="bg-white bg-opacity-10 rounded-lg p-6">
@@ -64,9 +75,9 @@ const TeamSelection = () => {
 };
 
 const TeamCard = ({ team, onChange }) => (
-  <div className="flex flex-col items-center">
+  <div className="flex flex-col items-center justify-between h-full">
     <img src={team.logo} alt={team.name} className="w-24 h-24 mb-2" />
-    <h2 className="text-xl font-semibold text-white mb-2">{team.name}</h2>
+    <h2 className="text-xl font-semibold text-white mb-2 text-center">{team.name}</h2>
     <div className="flex space-x-2">
       <button onClick={() => onChange(-1)} className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
         <ChevronLeft size={20} />
@@ -79,7 +90,6 @@ const TeamCard = ({ team, onChange }) => (
 );
 
 const PlayerButton = ({ player }) => (
-
   <Link to={`/player?player=${player.replace(/ /g,'')}`} className="select-player-link">
     <button className="w-full bg-white bg-opacity-20 hover:bg-opacity-30 text-white font-semibold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105">
       {player}
