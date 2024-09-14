@@ -10,22 +10,22 @@ const SelectTeam = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const [image, setImage] = useState('');
-  
+    const [goal, setGoal] = useState(3)
     const player = searchParams.get('player');
     const awayteam = searchParams.get('awayteam');
 
     const [data, setData] = useState({
-        "Match": "Tottenham Hotspur vs Manchester City",
-        "Team 1": "Tottenham Hotspur",
-        "Team 2": "Manchester City",
-        "Player": "Erling Haaland",
-        "Team": "Manchester City",
-        "Goals": 2,
+        "Match": "Home Team vs Away Team",
+        "Team 1": "Team 1",
+        "Team 2": "Team 2",
+        "Player": "Player Name",
+        "Team": "Team Name",
+        "Goals": "X",
         "Assists": 0,
         "TotalTackles": 0,
         "AccuratePasses": "12/14 (86%)",
         "DuelsWon": 6,
-        "MinutesPlayed": 89,
+        "MinutesPlayed": 90,
         "Position": "F",
         "SofascoreRating": 8.0,
         "PassAccuracy": 86
@@ -56,14 +56,31 @@ const SelectTeam = () => {
             },
         ],
     };
+    function generate_goal_data(goal){
+        let arr = [0,0,0,0,0,0,0,0,0,0];
+        let rands = []
+        for(let i=0; i<goal; i++){
+            arr[Math.floor(Math.random() * 10)]++;
+        }
+        var sum=0;
+        for(let i=0;i<10;i++){
+            sum=sum+arr[i];
+            arr[i]=sum;
+        }
+        console.log(arr);
+        // for(let i; i<goal; i++){
+            
+        // }
 
+        return arr;
+    }
     // Line chart for time-based stats
     const lineData = {
         labels: ['0', '10', '20', '30','40','50','60','70', '80', '90'], // Time intervals in minutes
         datasets: [
             {
                 label: 'Goals over Time',
-                data: [0, 0, 1, 2], // Example progress of goals during the game
+                data: generate_goal_data(goal), // Example progress of goals during the game
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
                 tension: 0.1
@@ -93,6 +110,7 @@ const SelectTeam = () => {
             json.Match = `${player} VS ${awayteam}`;
             json.Player = player
             setData(json);
+            setGoal(Math.round(json.Goals));
             console.log(json);
         }
     }
