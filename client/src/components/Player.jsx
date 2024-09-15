@@ -94,7 +94,7 @@ const SelectTeam = () => {
     };
 
     const getData = async () => {
-        const response = await fetch(`http://localhost:3000/player`, {
+        const response = await fetch(`http://54.147.52.167:3000/player`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -116,7 +116,7 @@ const SelectTeam = () => {
     }
 
     const getImage = async () => {
-        const response = await fetch(`http://localhost:3000/image?player=${player}`, {
+        const response = await fetch(`http://54.147.52.167:3000/image?player=${player}`, {
             method: "GET",
         })
 

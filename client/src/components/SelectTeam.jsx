@@ -23,7 +23,7 @@ const TeamSelection = () => {
   // Function to fetch teams from the API
   const getTeams = async () => {
     try {
-      const response = await fetch('http://localhost:3000/teams');
+      const response = await fetch('http://54.147.52.167:3000/teams');
       if (response.status === 200) {
         const data = await response.json();
         setTeams(data);

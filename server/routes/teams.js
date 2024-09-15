@@ -3,7 +3,6 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const data = await db.collection('player-images').find({}).toArray();
-  console.log(data)
   const map = new Map;
   for(let i = 0; i < data.length; i++){
     if(map.has(data[i].Team)){
@@ -16,7 +15,6 @@ router.get('/', async (req, res) => {
     Team: team,
     PlayerName: players
     }));
-  console.log(result);
   res.status(200).json(result);
 })
 
